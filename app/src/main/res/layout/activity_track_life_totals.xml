@@ -24,15 +24,19 @@
     <include layout="@layout/content_track_life_totals" />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="fill_parent"
+        android:orientation="horizontal"
+        >
 
         <ListView
             android:id="@+id/gameListView"
             android:layout_width="wrap_content"
-            android:layout_height="478dp"
+            android:layout_height="425dp"
+            android:paddingTop="50dp"
+            android:layout_weight="0.5"/>
             android:scrollbars="vertical" />
+
 
     </LinearLayout>
 

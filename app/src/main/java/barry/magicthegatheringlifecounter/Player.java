@@ -13,9 +13,10 @@ public class Player {
     private int gamesWon;
     private int gamesLost;
     private int totalPoints;
+    private int playerLife;
 
 
-
+    //different constructors
     public Player(String name, int played, int won, int lost, int points) {
         super();
         this.playerName = name;
@@ -23,8 +24,16 @@ public class Player {
         this.gamesWon = won;
         this.gamesLost = lost;
         this.totalPoints = points;
-
     }
+
+    public Player( String name){
+        this.playerName = name;
+    }
+    public Player( int life){
+        this.playerLife = life;
+    }
+
+    //getters and setters for variables
 
     public String getPlayerName() {
         return playerName;
@@ -32,6 +41,14 @@ public class Player {
 
     public void setPlayerName(String playerName) {
         this.playerName = playerName;
+    }
+
+    public int getPlayerLife() {
+        return playerLife;
+    }
+
+    public void setPlayerLife(int playerLife) {
+        this.playerLife = playerLife;
     }
 
     public int getGamesPlayed() {
@@ -68,8 +85,10 @@ public class Player {
 
     @Override
     public String toString() {
-        return this.playerName + this.gamesPlayed + this.gamesWon + this.gamesLost + this.totalPoints;
+        return this.playerName + "     Life: "+ this.playerLife ;
     }
+
+
 
 
 }

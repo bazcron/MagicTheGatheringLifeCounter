@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.RadioButton;
 
 public class MainActivity extends AppCompatActivity {
     private Button leagueTableButton;
@@ -37,6 +38,24 @@ public class MainActivity extends AppCompatActivity {
                 setUpGame();
             }
         }));
+    }
+
+    //code borrowed from this site : https://developer.android.com/guide/topics/ui/controls/radiobutton.html
+    public void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.radio_light:
+                if (checked)
+                    //
+                    break;
+            case R.id.radio_dark:
+                if (checked)
+                    //
+                    break;
+        }
     }
 
     public void leagueTable(){

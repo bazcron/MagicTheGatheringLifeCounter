@@ -8,7 +8,7 @@ import android.widget.ListView;
 import static barry.magicthegatheringlifecounter.DummyInfo.*;
 
 public class LeagueTable extends AppCompatActivity {
-    //public Player[] players;
+    //public Player[] playersName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +26,7 @@ public class LeagueTable extends AppCompatActivity {
                 new Player("Kate",6, 3, 3, 9),
                 new Player("Kevin",2, 2, 0, 6)
         };*/
-        ArrayAdapter<Player> adapter = new ArrayAdapter<Player>(this,  android.R.layout.simple_list_item_1, Integer.parseInt(players[0].getPlayerName()));
+        ArrayAdapter<Player> adapter = new ArrayAdapter<Player>(this,  android.R.layout.simple_list_item_1, playersName);
         listView.setAdapter(adapter);
     }
 

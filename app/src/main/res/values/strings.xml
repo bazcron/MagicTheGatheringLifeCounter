@@ -3,7 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_league_table">leagueTable</string>
     <string name="title_activity_set_up_game">Set Up Game</string>
-    <string name="leagueTableButtonText">League Table + Add a New Player</string>
+    <string name="leagueTableButtonText">League Table</string>
     <string name="setUpGameButtonText">Set Up Game</string>
     <string name="addNewPlayerToLeagueButtonText">Add New Player To League</string>
     <string name="addNewPlayerTextBox">Type Players Name Here</string>
@@ -15,4 +15,7 @@
     <string name="looseLifeButtonText">- LOOSE LIFE</string>
     <string name="addLifeButtonText">+ ADD LIFE</string>
     <string name="lifeValueInputText">00</string>
+    <string name="playerSelectedText">Selected Player</string>
+    <string name="light">Light Background</string>
+    <string name="dark">Dark Background</string>
 </resources>
