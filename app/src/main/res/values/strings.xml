@@ -16,6 +16,9 @@
     <string name="addLifeButtonText">+ ADD LIFE</string>
     <string name="lifeValueInputText">00</string>
     <string name="playerSelectedText">Selected Player</string>
-    <string name="light">Light Background</string>
-    <string name="dark">Dark Background</string>
+    <string name="light">White</string>
+    <string name="dark">Black</string>
+    <string name="red">Red</string>
+    <string name="green">Green</string>
+    <string name="blue">Blue</string>
 </resources>
