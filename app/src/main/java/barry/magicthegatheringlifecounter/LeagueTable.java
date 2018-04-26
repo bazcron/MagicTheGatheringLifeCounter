@@ -29,6 +29,7 @@ public class LeagueTable extends AppCompatActivity {
     ArrayAdapter<String> adapter;
     static List<String> playerListSort;
     static Boolean listIsSorted = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,7 +55,7 @@ public class LeagueTable extends AppCompatActivity {
                         "    Lost: " + allPlayers.get(i).getLost() + "    Points: " + allPlayers.get(i).getTotalScore());
             }
         }else{eachPlayer = (ArrayList<String>) playerListSort;        }
-       
+
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1, eachPlayer);
         listView.setAdapter(adapter);
 
@@ -70,35 +71,62 @@ public class LeagueTable extends AppCompatActivity {
         switch(view.getId()) {
             case R.id.radio_light:
                 if (checked) {
-                   /* Toast.makeText(this, "RED",
-                            Toast.LENGTH_LONG).show();*/
-                    sortData();
+               /* Toast.makeText(this, "RED",
+                        Toast.LENGTH_LONG).show();*/
+                    sortPlayerByName();
                     break;
                 }
             case R.id.radio_dark:
                 if (checked){
-                   /* Toast.makeText(this, "RED",
-                            Toast.LENGTH_LONG).show();*/
+               /* Toast.makeText(this, "RED",
+                        Toast.LENGTH_LONG).show();*/
+                    sortPlayerByName();
                     break;
                 }
         }
     }
-    private void sortData()
+    public void sortPlayerByName()
     {
         playerListSort= eachPlayer;
-
-        Collections.sort(playerListSort, new Comparator() {
+       /* Collections.sort(playerListSort, new Comparator() {
             public int compare(Object o1, Object o2) {
-                String name1 = (String) o1;
-                String name2 = (String) o2;
-                return name1.compareToIgnoreCase(name2);
-            }
-        });
+                Players player1 = (Players) o1;
+                Players player2 = (Players) o2;
+                String playerName1 = player1.getPlayerName();
+                String playerName2 = player2.getPlayerName();
 
+                return playerName1.compareToIgnoreCase(playerName2);
+            }
+        });*/
         //adapter.clear();
         adapter = (new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,playerListSort));
         listView.setAdapter(adapter);
         listIsSorted=true;
+    }
+
+    private void sortPlayerByPoints(){
+   /* playerListSort= eachPlayer;
+    Collections.sort(playerListSort, new Comparator<Object>() {
+        public int compare(Object o1, Object o2) {
+            Players p1 = (Players) o1;
+            Players p2 = (Players) o2;
+            int points1 = p1.getWon();
+            int points2 = p2.getWon();
+
+            // return Integer.valueOf(((Players) o1).getWon().compareTo(((Players) o2).getWon()));
+
+            if(points1 > points2){
+                return 1;
+            }else if(points2 > points1){
+                return -1;
+            }else{
+                return 0;
+            }
+        }
+    });
+    adapter = (new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,playerListSort));
+    listView.setAdapter(adapter);
+    listIsSorted=true;*/
     }
 
 

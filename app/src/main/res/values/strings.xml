@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Magic The Gathering Life Counter</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_league_table">league Table</string>
+    <string name="title_activity_league_table">League Table</string>
     <string name="title_activity_set_up_game">Set Up Game</string>
     <string name="leagueTableButtonText">League Table</string>
     <string name="setUpGameButtonText">Play Game</string>
@@ -9,7 +9,7 @@
     <string name="addNewPlayerTextBox">Type Players Name Here</string>
     <string name="leagueTableLabel">LEAGUE TABLE</string>
     <string name="leagueTable">League Table</string>
-    <string name="title_activity_track_life_totals">Track Life Totals</string>
+    <string name="title_activity_track_life_totals">Life Totals</string>
     <string name="choosePlayerTextLabel">Click on Players to keep track of their Life Totals. Then Press Button To Start</string>
     <string name="trackLifeTotalsButtonText">Click To Track Life Totals</string>
     <string name="looseLifeButtonText">- LOSE LIFE</string>

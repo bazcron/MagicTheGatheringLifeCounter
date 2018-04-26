@@ -48,7 +48,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getName();
     static View theView;
-    static String backgroundImage="";
+    static String backgroundImage = "";
     private Button leagueTableButton;
     private Button setUpGameButton;
     private Button addPlayerButton;
@@ -83,71 +83,72 @@ public class MainActivity extends AppCompatActivity {
         //create an instance of Gson and Players Class
         gsonInstance = new Gson();
         playersList = new PlayersList();
-
-       // List<Players> allPlayers = playersList.getPlayers();
+        // List<Players> allPlayers = playersList.getPlayers();
 
         //creates an object of all the information
-        playersList = gsonInstance.fromJson(jsonString,playersList.getClass());
+        playersList = gsonInstance.fromJson(jsonString, playersList.getClass());
 
-       // Log.i(TAG, playersList.getPlayers().get(1).getPlayerName());
+        // Log.i(TAG, playersList.getPlayers().get(1).getPlayerName());
 
         //run through each object within players
         allPlayers = playersList.getPlayers();
 
 
         int numOfPlayers = allPlayers.size();
-       // allPlayers.add(numOfPlayers-1,players);
+        // allPlayers.add(numOfPlayers-1,players);
         ArrayList<String> eachPlayer = new ArrayList<String>();
-        for(int i=0; i<numOfPlayers; i++) {
+        for (int i = 0; i < numOfPlayers; i++) {
             eachPlayer.add(allPlayers.get(i).getPlayerName());
         }
-            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1, eachPlayer);
-            thisListView.setAdapter(adapter);
-
-
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1, eachPlayer);
+        thisListView.setAdapter(adapter);
 
         // reworked code from this video https://www.youtube.com/watch?v=RrAxLCIMj6s
         theView = this.getWindow().getDecorView();
-        switch (backgroundImage){
-            case "red": theView.setBackgroundResource(R.drawable.red);
-            break;
-            case "white": theView.setBackgroundResource(R.drawable.white);
+        switch (backgroundImage) {
+            case "red":
+                theView.setBackgroundResource(R.drawable.red);
                 break;
-            case "black": theView.setBackgroundResource(R.drawable.black);
+            case "white":
+                theView.setBackgroundResource(R.drawable.white);
                 break;
-            case "blue": theView.setBackgroundResource(R.drawable.blue);
+            case "black":
+                theView.setBackgroundResource(R.drawable.black);
                 break;
-            case "green": theView.setBackgroundResource(R.drawable.green);
+            case "blue":
+                theView.setBackgroundResource(R.drawable.blue);
                 break;
-            default: theView.setBackgroundResource(R.drawable.magic_background);
+            case "green":
+                theView.setBackgroundResource(R.drawable.green);
+                break;
+            default:
+                theView.setBackgroundResource(R.drawable.magic_background);
                 break;
         }
-
-
         leagueTableButton = (Button) findViewById(R.id.leagueTableButton);
         leagueTableButton.setOnClickListener((new View.OnClickListener() {
-            public void onClick(View v){
+            public void onClick(View v) {
                 leagueTable();
             }
         }));
 
         addPlayerButton = (Button) findViewById((R.id.addPlayer));
         addPlayerButton.setOnClickListener((new View.OnClickListener() {
-            public void onClick(View v){
+            public void onClick(View v) {
                 addPlayer();
             }
         }));
 
         setUpGameButton = (Button) findViewById((R.id.setUpGameButton));
 
-        /*setUpGameButton.setOnClickListener((new View.OnClickListener() {
-            public void onClick(View v){
+    /*setUpGameButton.setOnClickListener((new View.OnClickListener() {
+        public void onClick(View v){
 
-                playGame();
-            }
-        }));*/
-        setUpGameButton.setOnClickListener((new View.OnClickListener()  {
-            public void onClick(View v){
+            playGame();
+        }
+    }));*/
+        setUpGameButton.setOnClickListener((new View.OnClickListener() {
+            public void onClick(View v) {
                 //...........................
                 //https://stackoverflow.com/questions/4590856/how-to-get-selected-items-from-multi-select-list-view
                 //........................... see if this code works
@@ -156,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < len; i++)
                     if (checked.get(i)) {
                         String item = adapter.getItem(i);
-                        /* do whatever you want with the checked item */
+                    /* do whatever you want with the checked item */
                     }
                 //.......................
                 playGame();
@@ -175,8 +176,8 @@ public class MainActivity extends AppCompatActivity {
         switch(view.getId()) {
             case R.id.radio_light:
                 if (checked) {
-                   /* Toast.makeText(this, "RED",
-                            Toast.LENGTH_LONG).show();*/
+               /* Toast.makeText(this, "RED",
+                        Toast.LENGTH_LONG).show();*/
 
                     CoordinatorLayout layout = (CoordinatorLayout) findViewById(R.id.main);
                     layout.setBackgroundResource(R.drawable.white);
@@ -184,23 +185,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             case R.id.radio_dark:
                 if (checked){
-                   /* Toast.makeText(this, "RED",
-                            Toast.LENGTH_LONG).show();*/
+               /* Toast.makeText(this, "RED",
+                        Toast.LENGTH_LONG).show();*/
 
                     CoordinatorLayout layout = (CoordinatorLayout) findViewById(R.id.main);
                     layout.setBackgroundResource(R.drawable.black);
                     break;
                 }
         }
-    }
-
-    public void leagueTable(){
-        Intent intent = new Intent(this, LeagueTable.class);
-        startActivity(intent);
-    }
-    public void playGame(){
-        Intent intent = new Intent(this, trackLifeTotals.class);
-        startActivity(intent);
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -220,6 +212,31 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+
+    public void leagueTable(){
+        Intent intent = new Intent(this, LeagueTable.class);
+        startActivity(intent);
+    }
+    public void playGame(){
+        Intent intent = new Intent(this, trackLifeTotals.class);
+        startActivity(intent);
+    }
+
+    private String readFromFile(){
+        StringBuffer sbJsonString = new StringBuffer();
+        InputStream is = getResources().openRawResource(R.raw.player_json);
+        int character;
+        try {
+            while ((character = is.read())!=-1)
+            {
+                sbJsonString.append((char) character);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sbJsonString.toString();
+    }
     public void addPlayer() {
         String jsonString = readFromFile();
 
@@ -268,18 +285,5 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private String readFromFile(){
-        StringBuffer sbJsonString = new StringBuffer();
-        InputStream is = getResources().openRawResource(R.raw.player_json);
-        int character;
-        try {
-            while ((character = is.read())!=-1)
-            {
-                sbJsonString.append((char) character);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return sbJsonString.toString();
-    }
+
 }

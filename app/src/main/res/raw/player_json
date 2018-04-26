@@ -1,0 +1,28 @@
+{"players":
+	[
+	    {
+    		"playerName":"Tim",
+    		"totalScore":12,
+    		"played":5,
+    		"won":4,
+    		"lost":3,
+    		"lifeTotal":20
+    	},
+		{
+			"playerName":"barry",
+			"totalScore":9,
+			"played":5,
+			"won":3,
+			"lost":2,
+			"lifeTotal":20
+		},
+		{
+			"playerName":"jack",
+			"totalScore":6,
+			"played":5,
+			"won":2,
+			"lost":3,
+			"lifeTotal":20
+		}
+	]
+}
