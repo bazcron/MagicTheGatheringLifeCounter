@@ -125,12 +125,12 @@ public class trackLifeTotals extends AppCompatActivity {
 
         //Toast.makeText(trackLifeTotals.this, "Selected"+playerPicked, Toast.LENGTH_LONG).show();
 
-        Toast.makeText(trackLifeTotals.this, "Selected"+playerText.getText(), Toast.LENGTH_LONG).show();
+       // Toast.makeText(trackLifeTotals.this, "Selected"+playerText.getText(), Toast.LENGTH_LONG).show();
 
         //checks if there is a value to add/delete and if a player has been selected
         //if there is, take value from current life
         if (valueFromInput > 0 && !playerText.getText().equals("Selected Player")) {  //check if value in number field is greater than zero and player has been picked
-            Toast.makeText(trackLifeTotals.this, "iNside if statement", Toast.LENGTH_LONG).show();
+           // Toast.makeText(trackLifeTotals.this, "iNside if statement", Toast.LENGTH_LONG).show();
             newLife = currentLife - valueFromInput;
             if (newLife <= 0) {
                 newLife = 0;
@@ -170,22 +170,22 @@ public class trackLifeTotals extends AppCompatActivity {
 
     //adds life to player
     public void addLife(){
-        //get id,
-        //get text from editText box and convert to an int
-        String numText = numValue.getText().toString();
-        int lifeValue =Integer.parseInt(numText);
+        int currentLife = allPlayers.get(playerSelectedId).getLifeTotal();
 
-        //get the current value from player from textlist
-        String prevValueText = numValue.getText().toString();
-        int currentLife =Integer.parseInt(prevValueText);
+        //put value from number field into variable to be used in if statement
+        String thisNumber = thisNum.getText().toString();
+        int valueFromInput = Integer.parseInt(thisNumber);
+
 
         //get text from playerText to be able to see if a player has been chosen
         String playerName = playerText.getText().toString();
 
-        if (lifeValue > 0 && !playerName.equals("Selected Player")){
-            int newValue = currentLife + lifeValue;
+        if (valueFromInput > 0 && !playerName.equals("Selected Player")){
+            int newValue = currentLife + valueFromInput;
 
             //set num in textlist to new number...!!
+            allPlayers.get(playerSelectedId).setLifeTotal(newValue);
+            updateItemAtPosition(playerSelectedId);
         }
         // add life from that players Lifetotal
         //refresh page*/

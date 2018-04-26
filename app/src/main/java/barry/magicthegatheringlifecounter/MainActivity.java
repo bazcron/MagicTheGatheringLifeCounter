@@ -223,6 +223,27 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void writeJsonFile(String json) {
+        //C:\Users\Conor\Desktop\Android App\magicTheGatheringLifeCounter\app\src\main\res\raw\player_json
+        if(json !=null) {
+            Writer writer = null;
+            String path = Environment.getExternalStorageDirectory().getAbsolutePath()+ "/Android App/magicTheGatheringLifeCounter/app/src/main/res/raw/player_json";
+            //path = "C:/Users/Conor/Desktop/Android App/magicTheGatheringLifeCounter/app/src/main/res/raw/player_json";
+            try {
+                OutputStream out = mContext.openFileOutput(path, Context.MODE_PRIVATE);
+                writer = new OutputStreamWriter(out);
+                writer.write(json.toString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (writer != null) try {
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
     private String readFromFile(){
         StringBuffer sbJsonString = new StringBuffer();
         InputStream is = getResources().openRawResource(R.raw.player_json);
@@ -262,27 +283,6 @@ public class MainActivity extends AppCompatActivity {
 
         //String strFileJson = getStringFromFile(fileJson.toString());
         writeJsonFile(listThis);
-    }
-    public void writeJsonFile(String json) {
-        //C:\Users\Conor\Desktop\Android App\magicTheGatheringLifeCounter\app\src\main\res\raw\player_json
-        if(json !=null) {
-            Writer writer = null;
-            String path = Environment.getExternalStorageDirectory().getAbsolutePath()+ "/Android App/magicTheGatheringLifeCounter/app/src/main/res/raw/player_json";
-            //path = "C:/Users/Conor/Desktop/Android App/magicTheGatheringLifeCounter/app/src/main/res/raw/player_json";
-            try {
-                OutputStream out = mContext.openFileOutput(path, Context.MODE_PRIVATE);
-                writer = new OutputStreamWriter(out);
-                writer.write(json.toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (writer != null) try {
-                    writer.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 
 
