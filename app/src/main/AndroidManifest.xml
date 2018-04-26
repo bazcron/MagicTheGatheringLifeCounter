@@ -24,13 +24,11 @@
             android:label="@string/title_activity_league_table"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".SetUpGame"
-            android:label="@string/title_activity_set_up_game"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".trackLifeTotals"
             android:label="@string/title_activity_track_life_totals"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
 
 </manifest>

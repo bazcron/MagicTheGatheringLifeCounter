@@ -28,11 +28,40 @@
         android:paddingTop="50dp"
         android:scrollbars="vertical" />
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/radioGroup"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_alignBottom="@+id/listView1"
+        app:layout_constraintBottom_toBottomOf="parent"
 
-    </LinearLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/setUpGameButton"
+        app:layout_constraintVertical_bias="0.734">
+
+        <RadioButton
+            android:id="@+id/radio_light"
+            android:layout_width="159dp"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:onClick="onRadioButtonClicked"
+            android:text="@string/sortAlpha" />
+
+        <RadioButton
+            android:id="@+id/radio_dark"
+            android:layout_width="158dp"
+            android:layout_height="wrap_content"
+            android:background="@color/grey"
+            android:onClick="onRadioButtonClicked"
+            android:text="@string/sortByPoints" />
+    </RadioGroup>
+
 
 </RelativeLayout>
+
+
