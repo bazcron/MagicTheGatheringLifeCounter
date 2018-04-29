@@ -3,6 +3,7 @@ package barry.magicthegatheringlifecounter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,14 +22,17 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 
+import static barry.magicthegatheringlifecounter.MainActivity.playersList;
 import static barry.magicthegatheringlifecounter.MainActivity.playersPlaying;
 
 public class trackLifeTotals extends AppCompatActivity {
     //declaring variables
+    private static final String TAG = trackLifeTotals.class.getName();
     private Button looseLife;
     private Button AddLife;
     public static int playerSelectedId;
@@ -39,6 +43,8 @@ public class trackLifeTotals extends AppCompatActivity {
     static int newLife;
     EditText thisNum;
     static List<Players> allPlayers;
+    static List<Players> leaguePlayers;
+
     static ListView listView;
     static View view;
     static ArrayAdapter<String> adapter;
@@ -80,12 +86,9 @@ public class trackLifeTotals extends AppCompatActivity {
         //.........................
         gsonInstance = new Gson();
 
-        // Log.i(TAG, playersList.getPlayers().get(1).getPlayerName());
-
-        //run through each object within players
-       // allPlayers = playersPlaying.getPlayers();
         //run through each object within players
         allPlayers = playersPlaying.getPlayers();
+        leaguePlayers = playersList.getPlayers();
 
         listView = (ListView) findViewById(R.id.gameListView);
 
@@ -97,14 +100,10 @@ public class trackLifeTotals extends AppCompatActivity {
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1, eachPlayer);
         listView.setAdapter(adapter);
 
-        //makes listView clickable
-        //listView.setClickable(true);
-
         //goes here when listView is clicked
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //Toast.makeText(trackLifeTotals.this,((TextView)view).getText(), Toast.LENGTH_LONG).show();
                 playerSelectedId = i;
 
                 playerPicked = allPlayers.get(playerSelectedId).getPlayerName();
@@ -112,14 +111,7 @@ public class trackLifeTotals extends AppCompatActivity {
                 playerText.setText(playerPicked);
             }
         });
-
-      //  listView.getChildAt(playerSelectedId).setEnabled(false);
-      //  listView.getChildAt(playerSelectedId).setClickable(false);
-
-
     }
-
-
 
 
     //takes life from player, and if players life is zero or less, removes from game by making unclickable
@@ -131,69 +123,72 @@ public class trackLifeTotals extends AppCompatActivity {
         String thisNumber = thisNum.getText().toString();
         int valueFromInput = Integer.parseInt(thisNumber);
 
-        //get text from playerText to be able to see if a player has been chosen
-        //playerText.setText(playerPicked);
-
-        //Toast.makeText(trackLifeTotals.this, "Selected"+playerPicked, Toast.LENGTH_LONG).show();
-
-       // Toast.makeText(trackLifeTotals.this, "Selected"+playerText.getText(), Toast.LENGTH_LONG).show();
-
         //checks if there is a value to add/delete and if a player has been selected
         //if there is, take value from current life
         if (valueFromInput > 0 && !playerText.getText().equals("Selected Player")) {  //check if value in number field is greater than zero and player has been picked
-           // Toast.makeText(trackLifeTotals.this, "iNside if statement", Toast.LENGTH_LONG).show();
             newLife = currentLife - valueFromInput;
             if (newLife <= 0) {
                 newLife = 0;
             }
             allPlayers.get(playerSelectedId).setLifeTotal(newLife);
 
-            //set num in textlist to new number...!!
-           // Toast.makeText(trackLifeTotals.this, "New Life: " + newLife, Toast.LENGTH_LONG).show();
-
-            //tv1.setText(selectedFromList);
-
             if (newLife == 0) {
-                playerDied(playerSelectedId);
+                playerDied();
             }else {
-                updateItemAtPosition(playerSelectedId);
+                updateItemAtPosition();
             }
         }
         }//end of if statement.................
-        //get id,
-        // get value from findViewById(R.id.lifeValueInput)...
-        // take life from that players Lifetotal
-        //if lifetotal is less than or equal to Zero.. make it zero... and make its NOT clickable, drop numberOfPlayers down by 1...
-        //if numberofplayers is less than 2... show winning player pop up.. add scores and data to leagueTable
-       // EditText lifeValue = (EditText)findViewById(R.id.lifeValueInput);
 
-        //refresh page
-
-
-
-    public void playerDied(int i){
+    public void playerDied(){
         //https://stackoverflow.com/questions/2558591/remove-listview-items-in-android
                 AlertDialog.Builder adb=new AlertDialog.Builder(trackLifeTotals.this);
                 adb.setTitle("It's The End For You!!");
                 adb.setMessage(allPlayers.get(playerSelectedId).getPlayerName()+" Has Died! ");
                 final int positionToRemove = playerSelectedId;
-               // adb.setNegativeButton("Cancel", null);
-                adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        eachPlayer.remove(positionToRemove);
-                        allPlayers.remove(playerSelectedId);
-                        adapter.notifyDataSetChanged();
-                    }});
-                adb.show();
+        adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                eachPlayer.remove(positionToRemove);
+                adapter.notifyDataSetChanged();
+            }});
+        adb.show();
+        int all = allPlayers.size();
+        all = all -1;
 
-              if(adapter.getCount()==1){
-                    adb.setTitle("The Winner IS");
-                    adb.setMessage(allPlayers.get(0).getPlayerName());
-                    adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
+        int league = leaguePlayers.size();
+        for (int i =0; i<leaguePlayers.size()-1; i++){
+            Log.i(TAG,"league size........................................................... "+league);
+            if (allPlayers.get(playerSelectedId).getPlayerName() == leaguePlayers.get(i).getPlayerName()){
+                int gamesPlayed = leaguePlayers.get(i).getPlayed();
+                int gamesLost = leaguePlayers.get(i).getLost();
+                leaguePlayers.get(i).setPlayed(gamesPlayed+1);
+                leaguePlayers.get(i).setLost(gamesLost+1);
+            }
+        }
+
+
+              if(all==1){
+                  AlertDialog.Builder adb2=new AlertDialog.Builder(trackLifeTotals.this);
+                  adb2.setTitle("The Winner IS");
+                  adb2.setMessage(allPlayers.get(0).getPlayerName());
+                    adb2.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            //adapter.notifyDataSetChanged();
                         }});
+                    adb2.show();
+                  for (int i =0; i<leaguePlayers.size()-1; i++){
+                  if (allPlayers.get(playerSelectedId).getPlayerName() == leaguePlayers.get(i).getPlayerName()) {
+                      int gamesPlayed = leaguePlayers.get(i).getPlayed();
+                      int gamesWon = leaguePlayers.get(i).getWon();
+                      int total = leaguePlayers.get(i).getTotalScore();
+                      leaguePlayers.get(i).setPlayed(gamesPlayed + 1);
+                      leaguePlayers.get(i).setWon(gamesWon + 1);
+                      leaguePlayers.get(i).setTotalScore(total+3);
+                  }
+                  }
+                  looseLife.setEnabled(false);
+                  AddLife.setEnabled(false);
                 }
+        allPlayers.remove(playerSelectedId);
     }
 
 
@@ -216,13 +211,13 @@ public class trackLifeTotals extends AppCompatActivity {
 
             //set num in textlist to new number...!!
             allPlayers.get(playerSelectedId).setLifeTotal(newValue);
-            updateItemAtPosition(playerSelectedId);
+            updateItemAtPosition();
         }
         // add life from that players Lifetotal
         //refresh page*/
     }
 
-    private void updateItemAtPosition(int playerSelectedId) {
+    private void updateItemAtPosition() {
        // Toast.makeText(trackLifeTotals.this,"position:"+playerSelectedId, Toast.LENGTH_LONG).show();
         adapter.clear();
         for(int i=0; i<allPlayers.size(); i++) {

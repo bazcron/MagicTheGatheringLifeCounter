@@ -335,8 +335,8 @@ public class MainActivity extends AppCompatActivity {
         gsonInstance.toJson(allPlayers);
         String listThis = allPlayers.toString();
 
-        Toast.makeText(this, listThis,
-                Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, listThis,
+        //        Toast.LENGTH_LONG).show();
 
         //String strFileJson = getStringFromFile(fileJson.toString());
         writeJsonFile(listThis);
