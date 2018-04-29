@@ -23,12 +23,12 @@ import static barry.magicthegatheringlifecounter.MainActivity.players;
 import static barry.magicthegatheringlifecounter.MainActivity.playersList;
 
 public class LeagueTable extends AppCompatActivity {
-    List<Players> allPlayers;
-    ArrayList<String> eachPlayer;
-    ListView listView;
-    ArrayAdapter<String> adapter;
-    static List<String> playerListSort;
-    static Boolean listIsSorted = false;
+    private List<Players> allPlayers;
+    private ArrayList<String> eachPlayer;
+    private ListView listView;
+    private ArrayAdapter<String> adapter;
+    private List<String> playerListSort;
+    private Boolean listIsSorted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

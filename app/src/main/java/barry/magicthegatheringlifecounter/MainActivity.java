@@ -30,6 +30,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,6 +39,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -55,13 +57,14 @@ public class MainActivity extends AppCompatActivity {
     private ListView list_table;
     public Gson gsonInstance;
     public static PlayersList playersList;
+    public static PlayersList playersPlaying;
     public static Players players = new Players();
-    List<Players> allPlayers;
+    private List<Players> allPlayers;
     Context mContext;
 
     //important variables....
-    final Boolean isGameBeingPlayed = false;   //all functions on pickPlayer screen are disabled if this is true
-    final Boolean moreThanOnePlayerPicked = false; //button playGame is disabled until this is true
+    static Boolean isGameBeingPlayed = false;   //all functions on pickPlayer screen are disabled if this is true
+    static Boolean moreThanOnePlayerPicked = false; //button playGame is disabled until this is true
 
 
     public MainActivity() {
@@ -78,22 +81,22 @@ public class MainActivity extends AppCompatActivity {
 
         //code for json adapted from https://www.youtube.com/watch?v=97rvAwlUnvA
         String jsonString = readFromFile();
-        //Log.i(TAG,jsonString);
+        Log.i(TAG,"............................................"+jsonString);
 
         //create an instance of Gson and Players Class
         gsonInstance = new Gson();
         playersList = new PlayersList();
+        playersPlaying = new PlayersList();
         // List<Players> allPlayers = playersList.getPlayers();
 
         //creates an object of all the information
         playersList = gsonInstance.fromJson(jsonString, playersList.getClass());
+        playersPlaying = gsonInstance.fromJson(jsonString, playersList.getClass());
 
         // Log.i(TAG, playersList.getPlayers().get(1).getPlayerName());
 
         //run through each object within players
         allPlayers = playersList.getPlayers();
-
-
         int numOfPlayers = allPlayers.size();
         // allPlayers.add(numOfPlayers-1,players);
         ArrayList<String> eachPlayer = new ArrayList<String>();
@@ -102,6 +105,39 @@ public class MainActivity extends AppCompatActivity {
         }
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_activated_1, eachPlayer);
         thisListView.setAdapter(adapter);
+
+        leagueTableButton = (Button) findViewById(R.id.leagueTableButton);
+        leagueTableButton.setOnClickListener((new View.OnClickListener() {
+            public void onClick(View v) {
+                leagueTable();
+            }
+        }));
+
+        addPlayerButton = (Button) findViewById((R.id.addPlayer));
+        addPlayerButton.setOnClickListener((new View.OnClickListener() {
+            public void onClick(View v) {
+                addPlayer();
+            }
+        }));
+
+        setUpGameButton = (Button) findViewById((R.id.setUpGameButton));
+
+        setUpGameButton.setOnClickListener((new View.OnClickListener() {
+            public void onClick(View v) {
+                //...........................
+                //https://stackoverflow.com/questions/4590856/how-to-get-selected-items-from-multi-select-list-view
+                //........................... see if this code works
+                int len = thisListView.getCount();
+                SparseBooleanArray checked = thisListView.getCheckedItemPositions();
+                for (int i = 0; i < len; i++)
+                    if (checked.get(i)) {
+                        String item = adapter.getItem(i);
+                    /* do whatever you want with the checked item */
+                    }
+                //.......................
+                playGame();
+            }
+        }));
 
         // reworked code from this video https://www.youtube.com/watch?v=RrAxLCIMj6s
         theView = this.getWindow().getDecorView();
@@ -125,45 +161,8 @@ public class MainActivity extends AppCompatActivity {
                 theView.setBackgroundResource(R.drawable.magic_background);
                 break;
         }
-        leagueTableButton = (Button) findViewById(R.id.leagueTableButton);
-        leagueTableButton.setOnClickListener((new View.OnClickListener() {
-            public void onClick(View v) {
-                leagueTable();
-            }
-        }));
 
-        addPlayerButton = (Button) findViewById((R.id.addPlayer));
-        addPlayerButton.setOnClickListener((new View.OnClickListener() {
-            public void onClick(View v) {
-                addPlayer();
-            }
-        }));
-
-        setUpGameButton = (Button) findViewById((R.id.setUpGameButton));
-
-    /*setUpGameButton.setOnClickListener((new View.OnClickListener() {
-        public void onClick(View v){
-
-            playGame();
-        }
-    }));*/
-        setUpGameButton.setOnClickListener((new View.OnClickListener() {
-            public void onClick(View v) {
-                //...........................
-                //https://stackoverflow.com/questions/4590856/how-to-get-selected-items-from-multi-select-list-view
-                //........................... see if this code works
-                int len = thisListView.getCount();
-                SparseBooleanArray checked = thisListView.getCheckedItemPositions();
-                for (int i = 0; i < len; i++)
-                    if (checked.get(i)) {
-                        String item = adapter.getItem(i);
-                    /* do whatever you want with the checked item */
-                    }
-                //.......................
-                playGame();
-            }
-        }));
-    }
+    }// end of OnCreate...................................
 
 
 
@@ -224,29 +223,71 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void writeJsonFile(String json) {
-        //C:\Users\Conor\Desktop\Android App\magicTheGatheringLifeCounter\app\src\main\res\raw\player_json
-        if(json !=null) {
-            Writer writer = null;
-            String path = Environment.getExternalStorageDirectory().getAbsolutePath()+ "/Android App/magicTheGatheringLifeCounter/app/src/main/res/raw/player_json";
-            //path = "C:/Users/Conor/Desktop/Android App/magicTheGatheringLifeCounter/app/src/main/res/raw/player_json";
-            try {
-                OutputStream out = mContext.openFileOutput(path, Context.MODE_PRIVATE);
-                writer = new OutputStreamWriter(out);
-                writer.write(json.toString());
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (writer != null) try {
-                    writer.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+        //String yourFile = "player_json.txt";
+        //String fileContents = "Hello world!";
+        //FileOutputStream outputStream;
+
+       // File directory = context.getFilesDir();
+       // File file = new File(directory, filename);
+        //File file = new File(getFilesDir(), "player_json.txt");
+        try {
+            File file = new File("player_json.txt");
+            file.createNewFile(); // if file already exists will do nothing
+            FileOutputStream fileout=openFileOutput("player_json.txt", MODE_PRIVATE);
+            OutputStreamWriter outputWriter=new OutputStreamWriter(fileout);
+            outputWriter.write(json);
+            outputWriter.close();
+
+            //display file saved message
+            Toast.makeText(getBaseContext(), "File saved successfully!",
+                    Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     private String readFromFile(){
+      /* String ret = "";
+
+        try {
+          //  File yourFile = new File("player_json.txt");
+          //  yourFile.createNewFile(); // if file already exists will do nothing
+            InputStream FileInputStream  = openFileInput("player_json.txt");
+            Toast.makeText(getBaseContext(), "inside try",
+                    Toast.LENGTH_SHORT).show();
+            if ( FileInputStream != null ) {
+                Toast.makeText(getBaseContext(), "inside not null",
+                        Toast.LENGTH_SHORT).show();
+                InputStreamReader inputStreamReader = new InputStreamReader(FileInputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append(receiveString);
+                }
+
+                FileInputStream.close();
+                Toast.makeText(getBaseContext(), "ret"+ret,
+                        Toast.LENGTH_SHORT).show();
+                ret = stringBuilder.toString();
+            }else{
+                Toast.makeText(getBaseContext(), "inside else",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+        }
+        catch (FileNotFoundException e) {
+            Log.e("login activity", ".....................................File not found:....................... " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", ".....................................Can not read file:.................... " + e.toString());
+        }
+
+        return ret;*/
+
+
         StringBuffer sbJsonString = new StringBuffer();
-        InputStream is = getResources().openRawResource(R.raw.player_json);
+        InputStream is = getResources().openRawResource(R.raw.player_jsonhardcoded);
         int character;
         try {
             while ((character = is.read())!=-1)
@@ -256,10 +297,32 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return sbJsonString.toString();
+        /*
+        String readstring="";
+        try {
+            FileInputStream fileIn=openFileInput("mytextfile.txt");
+            InputStreamReader InputRead= new InputStreamReader(fileIn);
+
+            char[] inputBuffer= new char[READ_BLOCK_SIZE];
+            String s="";
+            int charRead;
+
+            while ((charRead=InputRead.read(inputBuffer))>0) {
+                // char to string conversion
+                readstring=String.copyValueOf(inputBuffer,0,charRead);
+                s +=readstring;
+            }
+            InputRead.close();
+
+            //Toast.makeText(getBaseContext(), s,Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }*/
+       return sbJsonString.toString();
+
     }
     public void addPlayer() {
-        String jsonString = readFromFile();
 
         players.setPlayerName("jim");
         players.setLifeTotal(20);
@@ -272,12 +335,6 @@ public class MainActivity extends AppCompatActivity {
         gsonInstance.toJson(allPlayers);
         String listThis = allPlayers.toString();
 
-        Gson gson = new Gson();
-        JsonObject jsonObject = gson.fromJson(jsonString, JsonObject.class); // parse
-        jsonObject.addProperty("playerName", "fred"); //modify
-        String thisString = jsonObject.toString();
-        jsonString = jsonString.concat(thisString);
-        System.out.println(jsonObject); // generate
         Toast.makeText(this, listThis,
                 Toast.LENGTH_LONG).show();
 

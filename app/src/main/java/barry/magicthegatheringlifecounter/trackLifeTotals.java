@@ -1,7 +1,9 @@
 package barry.magicthegatheringlifecounter;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -13,13 +15,17 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
-import static barry.magicthegatheringlifecounter.MainActivity.playersList;
+import static barry.magicthegatheringlifecounter.MainActivity.playersPlaying;
 
 public class trackLifeTotals extends AppCompatActivity {
     //declaring variables
@@ -37,6 +43,8 @@ public class trackLifeTotals extends AppCompatActivity {
     static View view;
     static ArrayAdapter<String> adapter;
     static ArrayList<String> eachPlayer;
+    public Gson gsonInstance;
+   //public static PlayersList playersPlaying;
 
     //*** set int numberOfPlayers by getting number of players in list................!!
 
@@ -70,11 +78,16 @@ public class trackLifeTotals extends AppCompatActivity {
         thisNum = (EditText) findViewById(R.id.thisNum);
 
         //.........................
+        gsonInstance = new Gson();
+
+        // Log.i(TAG, playersList.getPlayers().get(1).getPlayerName());
+
         //run through each object within players
-        allPlayers = playersList.getPlayers();
+       // allPlayers = playersPlaying.getPlayers();
+        //run through each object within players
+        allPlayers = playersPlaying.getPlayers();
 
         listView = (ListView) findViewById(R.id.gameListView);
-
 
         int numOfPlayers = allPlayers.size();
         eachPlayer = new ArrayList<String>();
@@ -91,18 +104,17 @@ public class trackLifeTotals extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(trackLifeTotals.this,((TextView)view).getText(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(trackLifeTotals.this,((TextView)view).getText(), Toast.LENGTH_LONG).show();
                 playerSelectedId = i;
 
                 playerPicked = allPlayers.get(playerSelectedId).getPlayerName();
 
                 playerText.setText(playerPicked);
-
-
-//listView.getChildAt(i).isEnabled(false);
             }
         });
 
+      //  listView.getChildAt(playerSelectedId).setEnabled(false);
+      //  listView.getChildAt(playerSelectedId).setClickable(false);
 
 
     }
@@ -112,7 +124,6 @@ public class trackLifeTotals extends AppCompatActivity {
 
     //takes life from player, and if players life is zero or less, removes from game by making unclickable
     public void looseLife(){
-        if (listView.getChildAt(playerSelectedId).isClickable() ==false){
         //get the current value from player from textlist, then gets text from editText box and convert to an int
         int currentLife = allPlayers.get(playerSelectedId).getLifeTotal();
 
@@ -138,14 +149,15 @@ public class trackLifeTotals extends AppCompatActivity {
             allPlayers.get(playerSelectedId).setLifeTotal(newLife);
 
             //set num in textlist to new number...!!
-            Toast.makeText(trackLifeTotals.this, "New Life: " + newLife, Toast.LENGTH_LONG).show();
+           // Toast.makeText(trackLifeTotals.this, "New Life: " + newLife, Toast.LENGTH_LONG).show();
 
             //tv1.setText(selectedFromList);
 
             if (newLife == 0) {
                 playerDied(playerSelectedId);
+            }else {
+                updateItemAtPosition(playerSelectedId);
             }
-            updateItemAtPosition(playerSelectedId);
         }
         }//end of if statement.................
         //get id,
@@ -157,15 +169,34 @@ public class trackLifeTotals extends AppCompatActivity {
 
         //refresh page
 
-    }
+
 
     public void playerDied(int i){
-        Toast.makeText(trackLifeTotals.this,"Player Died", Toast.LENGTH_LONG).show();
+        //https://stackoverflow.com/questions/2558591/remove-listview-items-in-android
+                AlertDialog.Builder adb=new AlertDialog.Builder(trackLifeTotals.this);
+                adb.setTitle("It's The End For You!!");
+                adb.setMessage(allPlayers.get(playerSelectedId).getPlayerName()+" Has Died! ");
+                final int positionToRemove = playerSelectedId;
+               // adb.setNegativeButton("Cancel", null);
+                adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        eachPlayer.remove(positionToRemove);
+                        allPlayers.remove(playerSelectedId);
+                        adapter.notifyDataSetChanged();
+                    }});
+                adb.show();
 
-       listView.getChildAt(i).setEnabled(false);
-       listView.getChildAt(i).setClickable(false);
-
+              if(adapter.getCount()==1){
+                    adb.setTitle("The Winner IS");
+                    adb.setMessage(allPlayers.get(0).getPlayerName());
+                    adb.setPositiveButton("Ok", new AlertDialog.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //adapter.notifyDataSetChanged();
+                        }});
+                }
     }
+
+
 
 
     //adds life to player
@@ -197,7 +228,6 @@ public class trackLifeTotals extends AppCompatActivity {
         for(int i=0; i<allPlayers.size(); i++) {
             eachPlayer.add(allPlayers.get(i).getPlayerName()+"    LIFE: "+allPlayers.get(i).getLifeTotal());
         }
-
         adapter.notifyDataSetChanged();
         //int visiblePosition = listView.getFirstVisiblePosition();
        // Toast.makeText(trackLifeTotals.this,"Visibleposition:"+visiblePosition, Toast.LENGTH_LONG).show();
